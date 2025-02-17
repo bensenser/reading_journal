@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .container {
+            margin-top: 50px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #FF9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .note {
+            font-size: 14px;
+            color: #D32F2F;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Создай свой дневник чтения! 📖✨</h2>
+        <p>Заполни поля, чтобы начать.</p>
+
+        {% if form.errors %}
+            <div class="error">
+                <p>⚠️ Ошибка! Проверь введенные данные:</p>
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <label for="id_first_name">Имя:</label>
+            {{ form.first_name }}
+
+            <label for="id_last_name">Фамилия:</label>
+            {{ form.last_name }}
+
+            <label for="id_username">Логин (только английские буквы и цифры):</label>
+            {{ form.username }}
+            
+            <label for="id_password1">Пароль (не менее 7 символов, только английские буквы и цифры):</label>
+            {{ form.password1 }}
+            
+            <label for="id_password2">Повтори пароль:</label>
+            {{ form.password2 }}
+            
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+
+        <p class="note">⚠️ Важно! Запиши логин и пароль, чтобы не забыть!</p>
+
+        <a href="{% url 'login' %}">Уже есть аккаунт? Войти</a>
+    </div>
+</body>
+</html>

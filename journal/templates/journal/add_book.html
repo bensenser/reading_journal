@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Добавить книгу</title>
+    <!-- Подключаем Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Делаем поля для описания и главных героев шире */
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body class="container mt-4">
+
+    <h2 class="mb-4 text-center">📖 Добавить книгу</h2>
+
+    <form method="post" class="card p-4 shadow-sm bg-light">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">
+                    {% if field.name == "title" %}Название книги
+                    {% elif field.name == "author" %}Автор
+                    {% elif field.name == "start_date" %}Дата начала чтения
+                    {% elif field.name == "end_date" %}Дата окончания чтения
+                    {% elif field.name == "main_characters" %}Главные герои
+                    {% elif field.name == "description" %}Описание
+                    {% elif field.name == "rating" %}Оценка (от 1 до 5)
+                    {% else %}{{ field.label }}
+                    {% endif %}
+                </label>
+
+                {% if field.name in "start_date end_date" %}
+                    <!-- Поля выбора даты с русским календарем -->
+                    <input type="date" name="{{ field.name }}" class="form-control" value="{{ field.value|default:'' }}" required>
+                {% elif field.name in "main_characters description" %}
+                    <!-- Делаем textarea шире -->
+                    <textarea name="{{ field.name }}" class="form-control" required>{{ field.value|default:'' }}</textarea>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+
+                {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Сохранить ✅</button>
+            <a href="{% url 'index' %}" class="btn btn-secondary">⬅ Назад</a>
+        </div>
+    </form>
+
+    <!-- Подключаем Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Устанавливаем язык календаря на русский
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                input.setAttribute("lang", "ru");
+            });
+        });
+    </script>
+
+</body>
+</html>
